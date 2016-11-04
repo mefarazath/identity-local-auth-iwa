@@ -15,14 +15,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.identity.application.authenticator.iwa.internal;
+package org.wso2.carbon.identity.application.authenticator.iwa.kerberos.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
 import org.osgi.service.http.HttpService;
-import org.wso2.carbon.identity.application.authenticator.iwa.IWAConstants;
+import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.IWAConstants;
 import org.wso2.carbon.user.core.service.RealmService;
 
 /**

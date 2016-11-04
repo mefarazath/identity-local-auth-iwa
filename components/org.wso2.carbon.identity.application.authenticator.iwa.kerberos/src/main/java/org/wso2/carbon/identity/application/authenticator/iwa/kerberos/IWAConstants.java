@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.application.authenticator.iwa;
+package org.wso2.carbon.identity.application.authenticator.iwa.kerberos;
 
 /**
  * Constants for IWA federated authenticator application

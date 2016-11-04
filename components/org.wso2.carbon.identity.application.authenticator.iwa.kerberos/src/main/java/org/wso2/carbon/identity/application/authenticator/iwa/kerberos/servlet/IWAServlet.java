@@ -16,14 +16,14 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.application.authenticator.iwa.servlet;
+package org.wso2.carbon.identity.application.authenticator.iwa.kerberos.servlet;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ietf.jgss.GSSException;
-import org.wso2.carbon.identity.application.authenticator.iwa.IWAAuthenticationUtil;
-import org.wso2.carbon.identity.application.authenticator.iwa.IWAConstants;
+import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.IWAAuthenticationUtil;
+import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.IWAConstants;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 
 import java.io.IOException;

@@ -119,8 +119,8 @@
     </pluginRepositories>
 
     <modules>
-        <module>components/org.wso2.carbon.identity.application.authenticator.iwa</module>
-        <module>features/org.wso2.carbon.identity.application.authenticator.iwa.server.feature</module>
+        <module>components/org.wso2.carbon.identity.application.authenticator.iwa.kerberos</module>
+        <module>features/org.wso2.carbon.identity.application.authenticator.iwa.kerberos.server.feature</module>
     </modules>
 
     <dependencyManagement>

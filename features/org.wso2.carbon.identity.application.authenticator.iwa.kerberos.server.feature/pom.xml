@@ -26,7 +26,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.identity.application.authenticator.iwa.server.feature</artifactId>
+    <artifactId>org.wso2.carbon.identity.application.authenticator.iwa.kerberos.server.feature</artifactId>
     <packaging>pom</packaging>
     <name>IWA Application Authenticator Server Feature</name>
     <url>http://wso2.org</url>

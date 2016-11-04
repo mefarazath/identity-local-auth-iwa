@@ -24,7 +24,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.identity.application.authenticator.iwa</artifactId>
+    <artifactId>org.wso2.carbon.identity.application.authenticator.iwa.kerberos</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - IWA Identity Application Authenticator</name>
     <dependencies>
@@ -56,7 +56,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
-                            org.wso2.carbon.identity.application.authenticator.iwa.internal,
+                            org.wso2.carbon.identity.application.authenticator.iwa.kerberos.internal,
                         </Private-Package>
                         <Import-Package>
                             javax.security.auth,
@@ -82,8 +82,8 @@
                             version="${carbon.identity.package.import.version.range}",
                         </Import-Package>
                         <Export-Package>
-                            !org.wso2.carbon.identity.application.authenticator.iwa.internal,
-                            org.wso2.carbon.identity.application.authenticator.iwa.*;
+                            !org.wso2.carbon.identity.application.authenticator.iwa.kerberos.internal,
+                            org.wso2.carbon.identity.application.authenticator.iwa.kerberos.*;
                             version="${carbon.identity.local.auth.iwa.package.export.version}"
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>

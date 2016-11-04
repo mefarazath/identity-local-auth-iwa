@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.identity.application.authenticator.iwa;
+package org.wso2.carbon.identity.application.authenticator.iwa.kerberos;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -26,7 +26,7 @@ import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSManager;
 import org.wso2.carbon.base.CarbonBaseConstants;
-import org.wso2.carbon.identity.application.authenticator.iwa.internal.IWAServiceDataHolder;
+import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.internal.IWAServiceDataHolder;
 import org.wso2.carbon.identity.application.common.model.ClaimMapping;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.user.api.RealmConfiguration;

@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.wso2.carbon.identity.application.authenticator.iwa.bean;
+package org.wso2.carbon.identity.application.authenticator.iwa.kerberos.bean;
 
 /**
  * Bean for containing user information

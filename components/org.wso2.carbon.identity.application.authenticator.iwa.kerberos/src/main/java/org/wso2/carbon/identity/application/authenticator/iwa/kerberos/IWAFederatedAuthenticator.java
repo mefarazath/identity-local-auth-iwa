@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.application.authenticator.iwa;
+package org.wso2.carbon.identity.application.authenticator.iwa.kerberos;
 
 import org.apache.axiom.om.util.Base64;
 import org.apache.commons.lang.ArrayUtils;
@@ -29,15 +29,14 @@ import org.wso2.carbon.identity.application.authentication.framework.FederatedAp
 import org.wso2.carbon.identity.application.authentication.framework.context.AuthenticationContext;
 import org.wso2.carbon.identity.application.authentication.framework.exception.AuthenticationFailedException;
 import org.wso2.carbon.identity.application.authentication.framework.model.AuthenticatedUser;
-import org.wso2.carbon.identity.application.authenticator.iwa.bean.IWAAuthenticatedUserBean;
-import org.wso2.carbon.identity.application.authenticator.iwa.internal.IWAServiceDataHolder;
+import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.bean.IWAAuthenticatedUserBean;
+import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.internal.IWAServiceDataHolder;
 import org.wso2.carbon.identity.application.common.model.Property;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.claim.Claim;
 import org.wso2.carbon.user.core.service.RealmService;
-import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.security.PrivilegedActionException;
