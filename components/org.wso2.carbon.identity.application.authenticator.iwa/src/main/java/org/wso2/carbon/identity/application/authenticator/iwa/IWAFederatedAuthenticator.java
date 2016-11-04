@@ -55,8 +55,8 @@ import javax.servlet.http.HttpSession;
  */
 public class IWAFederatedAuthenticator extends AbstractIWAAuthenticator implements FederatedApplicationAuthenticator {
 
-    public static final String AUTHENTICATOR_NAME = "IWAFederatedAuthenticator";
-    public static final String AUTHENTICATOR_FRIENDLY_NAME = "IWA federated";
+    public static final String AUTHENTICATOR_NAME = "IWAKerberosAuthenticator";
+    public static final String AUTHENTICATOR_FRIENDLY_NAME = "IWA Kerberos";
 
     private static final long serialVersionUID = -713445365110141169L;
     private static final Log log = LogFactory.getLog(IWAFederatedAuthenticator.class);

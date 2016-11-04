@@ -39,7 +39,7 @@
             <artifactId>org.wso2.carbon.identity.application.authenticator.iwa</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.application.authentication.framework</artifactId>
         </dependency>
     </dependencies>

@@ -28,7 +28,7 @@ public class IWAConstants {
     public static final String COMMON_AUTH_EP = "commonauth";
     public static final String IWA_AUTH_EP = "iwa";
     public static final String UTF_8 = "UTF-8";
-    public static final String IWA_URL = "/iwa";
+    public static final String IWA_URL = "/iwa-kerb";
     public static final String IWA_PARAM_STATE = "state";
     public static final String IWA_PROCESSED = "iwaauth";
 
