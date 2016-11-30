@@ -40,7 +40,6 @@ import java.security.PrivilegedExceptionAction;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -85,7 +84,7 @@ public class IWAAuthenticationUtil {
 
         if (StringUtils.isNotEmpty(servicePrincipalName) && ArrayUtils.isNotEmpty(servicePrincipalPassword)) {
             CallbackHandler callbackHandler = getUserNamePasswordCallbackHandler(servicePrincipalName,
-                                                                                 servicePrincipalPassword);
+                    servicePrincipalPassword);
 
             // create kerberos server credentials for IS
             localIWACredentials = createServerCredentials(callbackHandler);
@@ -119,7 +118,7 @@ public class IWAAuthenticationUtil {
 
         if (log.isDebugEnabled()) {
             String msg = "Extracted details from GSS Token, LoggedIn User : " + loggedInUserName
-                         + " , Intended target : " + target;
+                    + " , Intended target : " + target;
             log.debug(msg);
         }
 
@@ -144,18 +143,8 @@ public class IWAAuthenticationUtil {
      * Set jaas.conf and krb5 paths
      */
     public static void setConfigFilePaths() {
-        String kerberosFilePath = System.getProperty(IWAConstants.KERBEROS_CONFIG_FILE);
         String jaasConfigPath = System.getProperty(IWAConstants.JAAS_CONFIG_FILE);
-
         String carbonHome = System.getProperty(CarbonBaseConstants.CARBON_HOME);
-
-        // set the krb5.conf file path if not set by the system property already
-        if (IdentityUtil.isBlank(kerberosFilePath)) {
-            kerberosFilePath =
-                    Paths.get(carbonHome, "repository", "conf", "identity", IWAConstants.KERBEROS_CONF_FILE_NAME)
-                            .toString();
-            System.setProperty(IWAConstants.KERBEROS_CONFIG_FILE, kerberosFilePath);
-        }
 
         // set jaas.conf file path if not set by the system property already
         if (IdentityUtil.isBlank(jaasConfigPath)) {
@@ -165,8 +154,7 @@ public class IWAAuthenticationUtil {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("Kerberos config file path set : " + kerberosFilePath + " ,JAAS config file path set : "
-                      + jaasConfigPath);
+            log.debug("Kerberos module JAAS config file path set to : " + jaasConfigPath);
         }
 
     }
@@ -201,11 +189,10 @@ public class IWAAuthenticationUtil {
      * @throws PrivilegedActionException
      */
     private static GSSCredential createCredentialsForSubject(final Subject subject) throws PrivilegedActionException {
-        final PrivilegedExceptionAction<GSSCredential> action =
-                new PrivilegedExceptionAction<GSSCredential>() {
+        final PrivilegedExceptionAction<GSSCredential> action = new PrivilegedExceptionAction<GSSCredential>() {
                     public GSSCredential run() throws GSSException {
                         return gssManager.createCredential(null, GSSCredential.INDEFINITE_LIFETIME,
-                                                           dataHolder.getSpnegoOid(), GSSCredential.ACCEPT_ONLY);
+                                dataHolder.getSpnegoOid(), GSSCredential.ACCEPT_ONLY);
                     }
                 };
 
@@ -229,7 +216,7 @@ public class IWAAuthenticationUtil {
      * @return CallbackHandler
      */
     private static CallbackHandler getUserNamePasswordCallbackHandler(final String username, final char[] password) {
-        final CallbackHandler handler = new CallbackHandler() {
+        return new CallbackHandler() {
             public void handle(final Callback[] callback) {
                 for (int i = 0; i < callback.length; i++) {
                     Callback currentCallBack = callback[i];
@@ -241,13 +228,11 @@ public class IWAAuthenticationUtil {
                         passCallback.setPassword(password);
                     } else {
                         log.error("Unsupported Callback i = " + i + "; class = "
-                                  + currentCallBack.getClass().getName());
+                                + currentCallBack.getClass().getName());
                     }
                 }
             }
         };
-
-        return handler;
     }
 
     /**
@@ -326,7 +311,7 @@ public class IWAAuthenticationUtil {
         for (Claim iwaClaim : userClaims) {
             if (iwaClaim.getValue() != null) {
                 claims.put(ClaimMapping.build(iwaClaim.getClaimUri(), iwaClaim.getClaimUri(), iwaClaim.getValue(),
-                                              false), iwaClaim.getValue());
+                        false), iwaClaim.getValue());
             }
         }
         return claims;

@@ -216,7 +216,7 @@ public class IWACustomLocalAuthenticator extends AbstractIWAAuthenticator implem
     }
 
     /**
-     * Check whether the authenticated user exists in any user store that belongs to the realm the user belongs to.
+     * Check whether the authenticated user exists in the given userStoreDomain in the given tenantDomain.
      *
      * @param authenticatedUserName
      * @param tenantDomain
