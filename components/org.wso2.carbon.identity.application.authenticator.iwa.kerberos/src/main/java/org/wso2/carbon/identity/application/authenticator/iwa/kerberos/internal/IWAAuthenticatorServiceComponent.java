@@ -25,8 +25,8 @@ import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.wso2.carbon.identity.application.authentication.framework.ApplicationAuthenticator;
 import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.IWAConstants;
+import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.IWACustomLocalAuthenticator;
 import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.IWAFederatedAuthenticator;
-import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.IWALocalAuthenticator;
 import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.servlet.IWAServlet;
 import org.wso2.carbon.user.core.service.RealmService;
 
@@ -51,7 +51,7 @@ public class IWAAuthenticatorServiceComponent {
 
     protected void activate(ComponentContext ctxt) {
         try {
-            IWALocalAuthenticator iwaLocalAuthenticator = new IWALocalAuthenticator();
+            IWACustomLocalAuthenticator iwaCustomLocalAuthenticator = new IWACustomLocalAuthenticator();
             IWAFederatedAuthenticator iwaFederatedAuthenticator = new IWAFederatedAuthenticator();
 
             // Register iwa servlet
@@ -60,16 +60,14 @@ public class IWAAuthenticatorServiceComponent {
             HttpService httpService = dataHolder.getHttpService();
             httpService.registerServlet(IWAConstants.IWA_URL, iwaServlet, null, null);
 
-//            ctxt.getBundleContext().registerService(ApplicationAuthenticator.class.getName(),
-//                                                    iwaLocalAuthenticator, null);
-            ctxt.getBundleContext().registerService(ApplicationAuthenticator.class.getName(),
-                                                    iwaFederatedAuthenticator, null);
+            ctxt.getBundleContext().registerService(ApplicationAuthenticator.class, iwaCustomLocalAuthenticator, null);
+            ctxt.getBundleContext().registerService(ApplicationAuthenticator.class, iwaFederatedAuthenticator, null);
             if (log.isDebugEnabled()) {
                 log.debug("IWALocalAuthenticator bundle is activated");
             }
         } catch (NamespaceException | ServletException e) {
             log.error("Error when registering the IWA servlet, '"
-                      + IWAConstants.IWA_URL + "' may be already in use." + e);
+                    + IWAConstants.IWA_URL + "' may be already in use." + e);
         } catch (Throwable e) {
             log.error("IWALocalAuthenticator bundle activation failed");
         }

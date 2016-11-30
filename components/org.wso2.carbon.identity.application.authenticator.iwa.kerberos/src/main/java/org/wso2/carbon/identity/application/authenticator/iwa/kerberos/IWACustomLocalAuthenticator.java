@@ -25,12 +25,10 @@ import org.wso2.carbon.identity.application.authentication.framework.LocalApplic
 import org.wso2.carbon.identity.application.authentication.framework.context.AuthenticationContext;
 import org.wso2.carbon.identity.application.authentication.framework.exception.AuthenticationFailedException;
 import org.wso2.carbon.identity.application.authentication.framework.model.AuthenticatedUser;
-import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.bean.IWAAuthenticatedUserBean;
 import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.internal.IWAServiceDataHolder;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
-import org.wso2.carbon.user.core.claim.Claim;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 
@@ -62,18 +60,29 @@ public class IWACustomLocalAuthenticator extends AbstractIWAAuthenticator implem
         IWAAuthenticationUtil.invalidateSession(request);
 
         /*
-                Fully Qualified username of the authenticated username (myname@KERBEROS.REALM)
+            Fully Qualified username of the authenticated user (myname@KERBEROS.REALM.COM)
         */
         String authenticatedUser = null;
+        /*
+            Tenant Domain to which the authenticated user belongs to.
+         */
         String authenticatedTenantDomain = null;
-        String authenticatedUserStoreDomain = null;
+        /*
+            UserStore Domain in which the user exists.
+         */
+        String authenticatedUserStoreDomain;
+        /*
+            Base64 decoded Kerberos token.
+         */
         byte[] base64DecodedToken = Base64.decode(gssToken);
         try {
-
             List<String> userStoreDomains;
             boolean isSaasApp = context.getSequenceConfig().getApplicationConfig().isSaaSApp();
             if (isSaasApp) {
-                // since this is a saas app we need to try out credentials of each tenant and find the correct tenant
+                if (log.isDebugEnabled()) {
+                    log.debug("Kerberos Token is used to authenticate to a SaaS app.");
+                }
+                // Since this is a SaaS app we need to try out credentials of each tenant and find the correct tenant
                 // domain to which the token was issued for.
                 for (String tenantDomain : IWAConfigUtil.getTenants()) {
                     authenticatedUser = getAuthenticatedUserFromToken(tenantDomain, base64DecodedToken);
@@ -85,11 +94,11 @@ public class IWACustomLocalAuthenticator extends AbstractIWAAuthenticator implem
 
                 if (authenticatedUser == null) {
                     throw new AuthenticationFailedException("Cannot decrypt the kerberos token using available " +
-                            "credentials.");
+                            "credentials of any tenant domain.");
                 } else {
-                    // get the user store domains we have to check the user for.
+                    // Get the user store domains we have to check the user for.
                     userStoreDomains = IWAConfigUtil.getUserStoreDomains(authenticatedTenantDomain);
-                    // check whether user exists in configured user store domains of this tenant
+                    // Check whether user exists in configured user store domains of this tenant
                     authenticatedUserStoreDomain = getAuthenticatedUserStoreDomain(authenticatedUser,
                             authenticatedTenantDomain, userStoreDomains);
                 }
@@ -101,9 +110,9 @@ public class IWACustomLocalAuthenticator extends AbstractIWAAuthenticator implem
 
                 if (authenticatedUser == null) {
                     throw new AuthenticationFailedException("Cannot decrypt the kerberos token using available " +
-                            "credentials.");
+                            "credentials of '" + authenticatedTenantDomain + "' tenant domain,");
                 } else {
-                    // get the user store domains we have to check the user for.
+                    // Get the user store domains we have to check the user for.
                     userStoreDomains = IWAConfigUtil.getUserStoreDomains(authenticatedTenantDomain);
                     // check whether user exists in configured user store domains of this tenant
                     authenticatedUserStoreDomain = getAuthenticatedUserStoreDomain(authenticatedUser,
@@ -115,7 +124,7 @@ public class IWACustomLocalAuthenticator extends AbstractIWAAuthenticator implem
         }
 
 
-        // we have an authenticated user if we come here.
+        // We have an authenticated user if we come here. Set the authenticated user to the authentication context.
         context.setSubject(createAuthenticatedUser(authenticatedUser, authenticatedUserStoreDomain));
     }
 
@@ -128,7 +137,7 @@ public class IWACustomLocalAuthenticator extends AbstractIWAAuthenticator implem
         GSSCredential gssCredential = createCredentialsForTenant(tenantDomain);
         String authenticatedUser = null;
         try {
-            // decrypt the token using credentials created for tenant
+            // Decrypt the token using credentials created for tenant
             authenticatedUser = getAuthenticatedUserFromToken(gssCredential, base64DecodedToken);
             if (log.isDebugEnabled()) {
                 log.debug("Kerberos Token decrypted with credentials of : " + tenantDomain + ". Authenticated User : " +
@@ -136,7 +145,7 @@ public class IWACustomLocalAuthenticator extends AbstractIWAAuthenticator implem
             }
 
         } catch (GSSException ex) {
-            // we failed to decrypt so we will continue trying out other tenant credentials
+            // We failed to decrypt so we will continue trying out other tenant credentials
             if (log.isDebugEnabled()) {
                 log.debug("Unable to decrypt the kerberos token with credentials of : " + tenantDomain);
             }
@@ -168,7 +177,7 @@ public class IWACustomLocalAuthenticator extends AbstractIWAAuthenticator implem
 
     /*
         Check whether the user exists in the provided userStoreDomain list in the given tenant. If user exists in any
-         user store within the scope of search return the userStoreDomain, else throw Exception.
+        user store within the scope of search return the userStoreDomain, else throw Exception.
      */
     private String getAuthenticatedUserStoreDomain(String authenticatedUser,
                                                    String authenticatedTenantDomain,
@@ -219,32 +228,12 @@ public class IWACustomLocalAuthenticator extends AbstractIWAAuthenticator implem
             AuthenticationFailedException {
         UserStoreManager userStoreManager;
         try {
-            userStoreManager = getPrimaryUserStoreManager(tenantDomain).getSecondaryUserStoreManager(userStoreDomain);
-            // String userStoreDomain = IdentityUtil.getPrimaryDomainName();
             authenticatedUserName = IdentityUtil.addDomainToName(authenticatedUserName, userStoreDomain);
+            userStoreManager = getPrimaryUserStoreManager(tenantDomain);
             return userStoreManager.isExistingUser(authenticatedUserName);
         } catch (UserStoreException e) {
-            throw new AuthenticationFailedException("IWAApplicationAuthenticator " +
-                    "failed to find the user in the userstores", e);
-        }
-    }
-
-    /**
-     * Gets Array of user claims which are associated with the given user.
-     *
-     * @param userBean
-     * @return
-     * @throws AuthenticationFailedException
-     */
-    private Claim[] getUserClaims(IWAAuthenticatedUserBean userBean) throws
-            AuthenticationFailedException {
-        try {
-            return getPrimaryUserStoreManager(userBean.getTenantDomain())
-                    .getSecondaryUserStoreManager(userBean.getUserStoreDomain()).getUserClaimValues
-                            (userBean.getUser(), "");
-        } catch (UserStoreException e) {
-            throw new AuthenticationFailedException("IWAApplicationAuthenticator failed to get user claims " +
-                    "from userstore", e);
+            throw new AuthenticationFailedException("Error when trying to check the user : " + authenticatedUserName
+                    + " in '" + userStoreDomain + "' userStoreDomain of '" + tenantDomain + "' tenant domain.", e);
         }
     }
 
