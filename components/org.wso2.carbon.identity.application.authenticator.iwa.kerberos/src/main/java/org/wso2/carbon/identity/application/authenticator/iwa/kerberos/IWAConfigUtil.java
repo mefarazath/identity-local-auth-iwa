@@ -25,13 +25,13 @@ import java.util.Map;
 
 public class IWAConfigUtil {
 
-	private Map<String, IWATenantConfig> configMap = new HashMap<>();
+	private static Map<String, IWATenantConfig> configMap = new HashMap<>();
 
-	public List<String> getTenants() {
+	public static List<String> getTenants() {
 		return new ArrayList<String>(configMap.keySet());
 	}
 
-	public String getSpnName(String tenantDomain) {
+	public static String getSpnName(String tenantDomain) {
 		IWATenantConfig iwaTenantConfig = configMap.get(tenantDomain);
 		if (iwaTenantConfig != null) {
 			return iwaTenantConfig.getSpnName();
@@ -40,7 +40,7 @@ public class IWAConfigUtil {
 		}
 	}
 
-	public char[] getSpnPassword(String tenantDomain) {
+	public static char[] getSpnPassword(String tenantDomain) {
 		IWATenantConfig iwaTenantConfig = configMap.get(tenantDomain);
 		if (iwaTenantConfig != null) {
 			return iwaTenantConfig.getSpnPassword();
@@ -49,7 +49,7 @@ public class IWAConfigUtil {
 		}
 	}
 
-	public List<String> getUserStoreDomains(String tenantDomain) {
+	public static List<String> getUserStoreDomains(String tenantDomain) {
 		IWATenantConfig iwaTenantConfig = configMap.get(tenantDomain);
 		if (iwaTenantConfig != null) {
 			return iwaTenantConfig.getUserStoreDomains();
