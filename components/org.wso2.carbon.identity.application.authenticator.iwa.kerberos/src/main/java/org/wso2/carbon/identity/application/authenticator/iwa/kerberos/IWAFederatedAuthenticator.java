@@ -43,7 +43,6 @@ import java.security.PrivilegedActionException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -123,12 +122,12 @@ public class IWAFederatedAuthenticator extends AbstractIWAAuthenticator implemen
 
 
             iWAAuthenticatedUserBean = userInformationInListedUserStores(authenticatedUserName,
-                                                                         context.getTenantDomain(), userStoreDomain);
+                    context.getTenantDomain(), userStoreDomain);
 
 
             if (!iWAAuthenticatedUserBean.isUserExists()) {
                 String msg = "User " + authenticatedUserName + "not found in the user store of tenant "
-                             + userStoreDomain;
+                        + userStoreDomain;
                 throw new AuthenticationFailedException("Authentication Failed, " + msg);
             }
             //Creates local authenticated user since this refer available user stores for user.
@@ -151,14 +150,6 @@ public class IWAFederatedAuthenticator extends AbstractIWAAuthenticator implemen
     @Override
     public List<Property> getConfigurationProperties() {
         List<Property> configProperties = new ArrayList<>();
-
-        Property kerberosServerURL = new Property();
-        kerberosServerURL.setName(IWAConstants.KERBEROS_SERVER);
-        kerberosServerURL.setDisplayName("Kerberos Server URL");
-        kerberosServerURL.setRequired(true);
-        kerberosServerURL.setDescription("Kerberos Server");
-        kerberosServerURL.setDisplayOrder(1);
-        configProperties.add(kerberosServerURL);
 
         Property spnName = new Property();
         spnName.setName(IWAConstants.SPN_NAME);
@@ -240,7 +231,7 @@ public class IWAFederatedAuthenticator extends AbstractIWAAuthenticator implemen
 
         } catch (AuthenticationFailedException e) {
             throw new AuthenticationFailedException("IWAApplicationAuthenticator " +
-                                                    "failed to find the user in the userstores", e);
+                    "failed to find the user in the userstores", e);
         }
     }
 
@@ -254,22 +245,17 @@ public class IWAFederatedAuthenticator extends AbstractIWAAuthenticator implemen
      * @return
      */
     private boolean isUserExistsInUserStore(String authenticatedUserName, String tenantDomain, String userStoreDomain)
-            throws
-            AuthenticationFailedException {
+            throws AuthenticationFailedException {
         UserStoreManager userStoreManager;
         try {
-            userStoreManager = getPrimaryUserStoreManager(tenantDomain).getSecondaryUserStoreManager(userStoreDomain);
-            // String userStoreDomain = IdentityUtil.getPrimaryDomainName();
             authenticatedUserName = IdentityUtil.addDomainToName(authenticatedUserName, userStoreDomain);
-
-            // Check whether the authenticated user is in primary user store. This is a limitation and will be improved
-            // to support ADs mounted as secondary user stores
+            userStoreManager = getPrimaryUserStoreManager(tenantDomain);
             return userStoreManager.isExistingUser(authenticatedUserName);
-
         } catch (UserStoreException e) {
-            throw new AuthenticationFailedException("IWAApplicationAuthenticator " +
-                                                    "failed to find the user in the userstores", e);
+            throw new AuthenticationFailedException("Error when trying to check the user : " + authenticatedUserName
+                    + " in '" + userStoreDomain + "' userStoreDomain of '" + tenantDomain + "' tenant domain.", e);
         }
+
     }
 
     /**
@@ -280,14 +266,14 @@ public class IWAFederatedAuthenticator extends AbstractIWAAuthenticator implemen
      * @throws AuthenticationFailedException
      */
     private Claim[] getUserClaims(IWAAuthenticatedUserBean userBean) throws
-                                                                     AuthenticationFailedException {
+            AuthenticationFailedException {
         try {
             return getPrimaryUserStoreManager(userBean.getTenantDomain())
                     .getSecondaryUserStoreManager(userBean.getUserStoreDomain()).getUserClaimValues
                             (userBean.getUser(), "");
         } catch (UserStoreException e) {
-            throw new AuthenticationFailedException("IWAApplicationAuthenticator failed to get user claims " +
-                                                    "from userstore", e);
+            throw new AuthenticationFailedException("IWA Application Authenticator failed to get user claims " +
+                    "from userstore", e);
         }
     }
 
