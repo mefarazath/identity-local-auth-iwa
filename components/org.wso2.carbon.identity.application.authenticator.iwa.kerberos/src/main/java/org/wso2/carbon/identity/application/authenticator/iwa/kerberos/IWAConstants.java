@@ -53,11 +53,24 @@ public class IWAConstants {
     public static final String KERBEROS_SERVER = "kerberosServer";
     public static final String KERBEROS_CONFIG_FILE = "java.security.auth.krb5.conf";
     public static final String JAAS_CONFIG_FILE = "java.security.auth.login.config";
+    public static final String IWA_TENANTS_CONFIG_FILE = "java.security.auth.iwa.tenants.config";
 
     public static final String KERBEROS_CONF_FILE_NAME = "krb5.conf";
     public static final String JAAS_CONF_FILE_NAME = "jaas.conf";
+    public static final String IWA_TENANTS_CONF_FILE_NAME = "iwa-tenants.properties";
 
 
     private IWAConstants() {
     }
+    
+	public class IWATenantsPropertyConfig {
+		private IWATenantsPropertyConfig() {
+		}
+
+		public static final String IWA_TENANTS = "IWA.tenant";
+		public static final String SERVICE_PRINCIPAL_NAME = "servicePrincipalName";
+		public static final String SERVICE_PRINCIPAL_PASSWORD = "servicePrincipalPassword";
+		public static final String USERSTORE_DOMAINS = "userStoreDomains";
+		public static final String IWA_PATTERN_STRING = "(\\.\\d\\.)";
+	}
 }

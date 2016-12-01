@@ -23,12 +23,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ietf.jgss.GSSException;
 import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.IWAAuthenticationUtil;
+import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.IWAConfigUtil;
 import org.wso2.carbon.identity.application.authenticator.iwa.kerberos.IWAConstants;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.security.PrivilegedActionException;
+
 import javax.security.auth.login.LoginException;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -139,8 +141,9 @@ public class IWAServlet extends HttpServlet {
         try {
             // set the kerberos config path
             IWAAuthenticationUtil.setConfigFilePaths();
+            IWAConfigUtil.buildIwaTenantsConfig();
             IWAAuthenticationUtil.initializeIWALocalAuthenticator();
-        } catch (GSSException | LoginException | PrivilegedActionException e) {
+        } catch (GSSException | LoginException | PrivilegedActionException | IOException e) {
             throw new ServletException("Error when creating gss credentials.", e);
         }
     }

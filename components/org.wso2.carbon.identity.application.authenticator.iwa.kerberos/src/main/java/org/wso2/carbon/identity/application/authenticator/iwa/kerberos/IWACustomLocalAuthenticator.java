@@ -96,6 +96,9 @@ public class IWACustomLocalAuthenticator extends AbstractIWAAuthenticator implem
                     throw new AuthenticationFailedException("Cannot decrypt the kerberos token using available " +
                             "credentials of any tenant domain.");
                 } else {
+					if (log.isDebugEnabled()) {
+						log.debug("Decrypted Kerberos token contained the user: " + authenticatedUser);
+					}
                     // Get the user store domains we have to check the user for.
                     userStoreDomains = IWAConfigUtil.getUserStoreDomains(authenticatedTenantDomain);
                     // Check whether user exists in configured user store domains of this tenant
@@ -112,6 +115,9 @@ public class IWACustomLocalAuthenticator extends AbstractIWAAuthenticator implem
                     throw new AuthenticationFailedException("Cannot decrypt the kerberos token using available " +
                             "credentials of '" + authenticatedTenantDomain + "' tenant domain,");
                 } else {
+					if (log.isDebugEnabled()) {
+						log.debug("Decrypted Kerberos token contained the user: " + authenticatedUser);
+					}
                     // Get the user store domains we have to check the user for.
                     userStoreDomains = IWAConfigUtil.getUserStoreDomains(authenticatedTenantDomain);
                     // check whether user exists in configured user store domains of this tenant
